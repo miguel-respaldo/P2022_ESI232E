@@ -10,4 +10,4 @@ x1 = (-b + math.sqrt(discriminante)) / (2*a)
 x2 = (-b - math.sqrt(discriminante)) / (2*a)
 
 print("X1 es:",x1)
-print("X1 es:",x2)
+print("X2 es:",x2)
