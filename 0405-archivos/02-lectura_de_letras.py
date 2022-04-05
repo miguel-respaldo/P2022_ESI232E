@@ -1,0 +1,6 @@
+f = open("demo.txt","r")
+# print(f.read())
+texto = f.read(10)
+print(texto)
+texto = f.read(10)
+print(texto)
