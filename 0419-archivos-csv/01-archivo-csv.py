@@ -7,6 +7,7 @@ for x in range(datos):
     telefono = input("Escribe el telefono: ")
     direccion = input("Escribe la dirección: ")
     archivo.write(nombre + "," + telefono + "," + direccion + "\n")
+    print("---------------------------------")
 
 archivo.close()
 print("Los datos fueron guardados.")
