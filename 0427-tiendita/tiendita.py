@@ -35,7 +35,7 @@ def carrito_agregar(producto, cantidad):
         lista = linea.split(",")
         # Al encontrar el producto lo gardamos en carrito
         if producto.lower() == lista[1].lower():
-            archivo_carr.write(lista[1] + "," + lista[2] + "," + str(cantidad))
+            archivo_carr.write(lista[1] + "," + lista[2] + "," + str(cantidad) + "\n")
             break
 
     archivo_prod.close()
@@ -51,7 +51,7 @@ def carrito_agregar_oferta(producto, cantidad):
         lista = linea.split(",")
         # Al encontrar el producto lo gardamos en carrito
         if producto.lower() == lista[1].lower():
-            archivo_carr.write(lista[1] + "," + lista[4].strip() + "," + str(cantidad))
+            archivo_carr.write(lista[1] + "," + lista[4].strip() + "," + str(cantidad) + "\n")
             break
 
     archivo_prod.close()
@@ -63,13 +63,13 @@ def carrito_mostrar():
     total = 0.0
     numero = 1
 
-    print("{:<5s}{:<15s}{:>8s}{:>8s}".format("No.", "Nombre", "Precio", "Cantidad"))
+    print("{:<5s}{:<15s}{:>8s}{:>10s}".format("No.", "Nombre", "Precio", "Cantidad"))
     for linea in archivo:
         lista = linea.split(",")
         # Nos saltamos la primera linea, que es la de los titulos.
         if lista[0] == "Producto":
             continue
-        print("{:<5d}{:<15s}{:>8.2f}{:^8d}".format(numero,lista[0],float(lista[1]),int(lista[2])))
+        print("{:<5d}{:<15s}{:>8.2f}{:^10d}".format(numero,lista[0],float(lista[1]),int(lista[2])))
         numero += 1
         total += float(lista[1]) * float(lista[2])
 
@@ -101,10 +101,10 @@ def producto_mostrar(la_categoria):
 
     if producto.isnumeric():
         num_prod = int(producto)
-        if num_prod != 0:
+        if num_prod != 0 and num_prod <= len(lista_de_productos):
             cantidad = eval(input("¿Cuantos articulos?: "))
             carrito_agregar(lista_de_productos[num_prod-1], cantidad)
-    else:
+    elif producto != "":
         if producto.title() in lista_de_productos:
             cantidad = eval(input("¿Cuantos articulos?: "))
             carrito_agregar(producto.title(), cantidad)
@@ -124,9 +124,12 @@ def producto_mostrar_ofertas():
     print("{:<5s}{:<15s}{:>8s}{:>20s}".format("No.", "Nombre", "Precio", "Cantidad en almacen"))
     for linea in archivo:
         lista = linea.split(",")
-        if  lista[4].strip().lower() =! "0":
+        # Nos saltamos la primera linea, que es la de los titulos.
+        if lista[1] == "Producto":
+            continue
+        if  lista[4].strip().lower() != "0":
             lista_de_productos.append(lista[1])
-            print("{:<5d}{:<15s}{:>8.2f}{:^20d}".format(numero,lista[1],float(lista[4]),int(lista[3])))
+            print("{:<5d}{:<15s}{:>8.2f}{:^20d}".format(numero,lista[1],float(lista[4].strip()),int(lista[3])))
             numero += 1
 
     archivo.close()
@@ -138,10 +141,10 @@ def producto_mostrar_ofertas():
 
     if producto.isnumeric():
         num_prod = int(producto)
-        if num_prod != 0:
+        if num_prod != 0 and num_prod <= len(lista_de_productos):
             cantidad = eval(input("¿Cuantos articulos?: "))
             carrito_agregar_oferta(lista_de_productos[num_prod-1], cantidad)
-    else:
+    elif producto != "":
         if producto.title() in lista_de_productos:
             cantidad = eval(input("¿Cuantos articulos?: "))
             carrito_agregar_oferta(producto.title(), cantidad)
@@ -175,13 +178,16 @@ while opcion_menu_principal != 4:
     opcion_menu_principal = menu_principal()
 
     if   opcion_menu_principal == 1:
-        opcion_menu_productos = 0:
 
+        opcion_menu_productos = 0
         while opcion_menu_productos != 5:
+
+            opcion_menu_productos = menu_productos()
+
             if   opcion_menu_productos == 1:
                 producto_mostrar("botanas")
             elif opcion_menu_productos == 2:
-                producto_mostrar("refrescos")
+                producto_mostrar("refresco")
             elif opcion_menu_productos == 3:
                 producto_mostrar("bebidas")
             elif opcion_menu_productos == 4:
