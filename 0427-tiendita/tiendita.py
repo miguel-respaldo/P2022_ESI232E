@@ -1,3 +1,4 @@
+import os
 
 ARCHIVO_PRODUCTOS="productos.csv"
 ARCHIVO_CARRITO="carrito.csv"
@@ -26,15 +27,56 @@ def menu_productos():
 
 
 def carrito_agregar(producto, cantidad):
-    pass
+    archivo_prod = open(ARCHIVO_PRODUCTOS, "r")
+    archivo_carr = open(ARCHIVO_CARRITO,"a")
+
+    # Buscamos el precio del prodcuto
+    for linea in archivo_prod:
+        lista = linea.split(",")
+        # Al encontrar el producto lo gardamos en carrito
+        if producto.lower() == lista[1].lower():
+            archivo_carr.write(lista[1] + "," + lista[2] + "," + str(cantidad))
+            break
+
+    archivo_prod.close()
+    archivo_carr.close()
 
 
 def carrito_agregar_oferta(producto, cantidad):
-    pass
+    archivo_prod = open(ARCHIVO_PRODUCTOS, "r")
+    archivo_carr = open(ARCHIVO_CARRITO,"a")
+
+    # Buscamos el precio del prodcuto
+    for linea in archivo_prod:
+        lista = linea.split(",")
+        # Al encontrar el producto lo gardamos en carrito
+        if producto.lower() == lista[1].lower():
+            archivo_carr.write(lista[1] + "," + lista[4].strip() + "," + str(cantidad))
+            break
+
+    archivo_prod.close()
+    archivo_carr.close()
 
 
 def carrito_mostrar():
-    pass
+    archivo = open(ARCHIVO_CARRITO,"r")
+    total = 0.0
+    numero = 1
+
+    print("{:<5s}{:<15s}{:>8s}{:>8s}".format("No.", "Nombre", "Precio", "Cantidad"))
+    for linea in archivo:
+        lista = linea.split(",")
+        # Nos saltamos la primera linea, que es la de los titulos.
+        if lista[0] == "Producto":
+            continue
+        print("{:<5d}{:<15s}{:>8.2f}{:^8d}".format(numero,lista[0],float(lista[1]),int(lista[2])))
+        numero += 1
+        total += float(lista[1]) * float(lista[2])
+
+    archivo.close()
+
+    print("-----------------------------------------------")
+    print("{:>30s}{:>8.2f}".format("Total:", total))
 
 
 def producto_mostrar(la_categoria):
@@ -82,7 +124,7 @@ def producto_mostrar_ofertas():
     print("{:<5s}{:<15s}{:>8s}{:>20s}".format("No.", "Nombre", "Precio", "Cantidad en almacen"))
     for linea in archivo:
         lista = linea.split(",")
-        if la_categoria.lower() == lista[0].strip().lower():
+        if  lista[4].strip().lower() =! "0":
             lista_de_productos.append(lista[1])
             print("{:<5d}{:<15s}{:>8.2f}{:^20d}".format(numero,lista[1],float(lista[4]),int(lista[3])))
             numero += 1
@@ -114,6 +156,20 @@ def producto_mostrar_ofertas():
 ### Programa principal ####
 
 opcion_menu_principal = 0
+
+# Primero nos aseguramos si existe un carrito anterior
+if os.path.exists(ARCHIVO_CARRITO):
+    print("Un archivo de carrito existe")
+    usar = input("¿Gustas usar este archivo? [S/n]:")
+    if usar.lower() == "n":
+        archivo = open(ARCHIVO_CARRITO,"w")
+        archivo.write("Producto,Precio,Cantidad\n")
+        archivo.close()
+else:
+    archivo = open(ARCHIVO_CARRITO,"w")
+    archivo.write("Producto,Precio,Cantidad\n")
+    archivo.close()
+
 
 while opcion_menu_principal != 4:
     opcion_menu_principal = menu_principal()
